@@ -1,0 +1,129 @@
+output_dir_keys: ["diffseed"]
+diffseed: "{dseed_generator}"
+
+evaluate_locals_before: true
+evaluate_locals_after: true
+evaluate_global_model: false
+evaluate_locals_ood: false
+evaluate_global_joint: false
+
+eval_on_test: true
+
+templates:
+  dataset: "emotion"
+  dseed_generator: 0
+
+dseed_n: 5
+
+ood_datasets:
+  ood0:
+    dataset_name: emoint
+  ood1:
+    dataset_name: ssec
+  ood2:
+    dataset_name: electoraltweets
+  ood3:
+    dataset_name: grounded_emotions
+  ood4:
+    dataset_name: affectivetext
+  ood5:
+    dataset_name: "dailydialog"
+    test_only: true
+  ood6:
+    dataset_name: "crowdflower"
+    test_only: true
+  ood7:
+    dataset_name: "tec"
+    test_only: true
+  ood8:
+    dataset_name: "tales-emotion"
+    test_only: true
+  ood9:
+    dataset_name: "isear"
+    test_only: true
+
+
+local_models:
+  output_dir_format: '{main_output_dir}/local_models/{name}'
+  models:
+      model0:
+        dataset_name: "dailydialog"
+        seed: "{dseed1}"
+        zoo_filter:
+          seed: "{dseed1}"
+      model1:
+        dataset_name: "crowdflower"
+        seed: "{dseed2}"
+        zoo_filter:
+          seed: "{dseed2}"
+      model2:
+        dataset_name: "tec"
+        seed: "{dseed3}"
+        zoo_filter:
+          seed: "{dseed3}"
+      model3:
+        dataset_name: "tales-emotion"
+        seed: "{dseed4}"
+        zoo_filter:
+          seed: "{dseed4}"
+      model4:
+        dataset_name: "emobank"
+      model5:
+        dataset_name: "isear"
+        seed: "{dseed5}"
+        zoo_filter:
+          seed: "{dseed5}"
+      model6:
+        dataset_name: "emoint"
+      model7:
+        dataset_name: "ssec"
+      model8:
+        dataset_name: "electoraltweets"
+      model9:
+        dataset_name: "fb-valence-arousal-anon"
+      model10:
+        dataset_name: "grounded_emotions"
+      model11:
+        dataset_name: "emotion-cause"
+      model12:
+        dataset_name: "affectivetext"
+
+merger:
+  exclude_param_regex: []
+
+tokenizer: "{resource_dir}/distilbert-base-uncased"
+model_type: distilbert
+
+# for debug
+
+
+global_device: 'cuda:0'
+dataset: "{dataset}"
+partition_method: "uniform"
+
+
+# from fednlp: model_args
+default_model_args:
+  # just for debugging
+  is_regression: false
+  task_type: "multi_label"
+  num_train_epochs: 3.0
+  do_lower_case: true
+  per_device_eval_batch_size: 32
+  fp16: false
+  gradient_accumulation_steps: 1
+  learning_rate: 2.0e-5
+  local_rank: -1
+  max_grad_norm: 1.0
+  max_seq_length: 128
+  model_type: null
+  save_total_limit: 2
+  max_steps: -1
+  per_device_train_batch_size: 32
+  use_multiprocessing: false # dataloader
+  labels_map: {}
+  regression: false
+  version: 0
+  partition: -1
+  device: 'cuda:0'
+

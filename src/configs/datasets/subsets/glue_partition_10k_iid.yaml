@@ -1,0 +1,70 @@
+evaluate_locals_before: true
+evaluate_locals_after: true
+evaluate_global_model: false
+evaluate_locals_ood: false
+evaluate_global_joint: false
+
+templates:
+  dataset_name: sst2
+  seed: 10
+
+partition:
+  n_partition: 2
+  method: iid
+  n_total_examples: 20000
+
+local_models:
+  output_dir_format: '{main_output_dir}/local_models/{name}'
+  models:
+      model0:
+        task_type: classification
+        dataset_name: "{dataset_name}"
+        partition: 0
+        device: 'cuda:0'
+        version: "iid10k_0_model0"
+        zoo_filter:
+            version: "iid10k_0_model0"
+      model1:
+        task_type: classification
+        dataset_name: "{dataset_name}"
+        partition: 1
+        device: 'cuda:0'
+        version: "iid10k_0_model1"
+        zoo_filter:
+            version: "iid10k_0_model1"
+
+merger:
+  exclude_param_regex: ['.*pre_classifier.*','.*classifier.*']
+
+tokenizer: "{resource_dir}/distilbert-base-uncased"
+model_type: distilbert
+
+# for debug
+
+
+global_device: 'cuda:0'
+dataset: "glue"
+
+
+# from fednlp: model_args
+default_model_args:
+  # just for debugging
+  is_regression: false
+  num_train_epochs: 3.0
+  do_lower_case: true
+  per_device_eval_batch_size: 32
+  fp16: false
+  gradient_accumulation_steps: 1
+  learning_rate: 2.0e-5
+  local_rank: -1
+  max_grad_norm: 1.0
+  max_seq_length: 128
+  model_type: null
+  save_total_limit: 2
+  max_steps: -1
+  per_device_train_batch_size: 32
+  use_multiprocessing: false # dataloader
+  labels_map: {}
+  regression: false
+
+  version: "iid10k_0"

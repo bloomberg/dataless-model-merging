@@ -1,0 +1,93 @@
+main_output_dir: 'runs/ner_debug'
+
+
+evaluate_locals_before: true
+evaluate_locals_after: true
+evaluate_global_model: false
+evaluate_locals_ood: false
+evaluate_global_joint: false
+
+eval_on_test: true
+
+templates:
+  dataset: "ner"
+
+tokenizer_add_prefix_space: true
+
+ood_datasets:
+    ood0:
+      dataset_name: "ontonotes@bc"
+    ood1:
+      dataset_name: "ontonotes@mz"
+    ood2:
+      dataset_name: "ontonotes@tc"
+    ood3:
+      dataset_name: "ontonotes@nw"
+    ood4:
+      dataset_name: "ontonotes@bn"
+    ood5:
+      dataset_name: "ontonotes@wb"
+    ood6:
+      dataset_name: "conll"
+    ood7:
+      dataset_name: "twitter"
+
+local_models:
+  output_dir_format: '{main_output_dir}/local_models/{name}'
+  models:
+      model0:
+        dataset_name: "ontonotes@bc"
+      model1:
+        dataset_name: "ontonotes@mz"
+      model2:
+        dataset_name: "ontonotes@tc"
+      model3:
+        dataset_name: "ontonotes@nw"
+      model4:
+        dataset_name: "ontonotes@bn"
+      model5:
+        dataset_name: "ontonotes@wb"
+      model6:
+        dataset_name: "conll"
+      model7:
+        dataset_name: "twitter"
+
+merger:
+  exclude_param_regex: []
+
+tokenizer: "{resource_dir}/distilbert-base-uncased"
+model_type: distilbert
+
+# for debug
+
+
+global_device: 'cuda:0'
+dataset: "{dataset}"
+partition_method: "uniform"
+
+
+# from fednlp: model_args
+default_model_args:
+  # just for debugging
+  is_regression: false
+  task_type: "token_classification"
+  num_train_epochs: 3.0
+  do_lower_case: true
+  per_device_eval_batch_size: 32
+  fp16: false
+  gradient_accumulation_steps: 1
+  learning_rate: 2.0e-5
+  local_rank: -1
+  max_grad_norm: 1.0
+  max_seq_length: 128
+  model_type: null
+  save_total_limit: 2
+  max_steps: -1
+  per_device_train_batch_size: 32
+  use_multiprocessing: false # dataloader
+  labels_map: {}
+  regression: false
+  version: 0
+  partition: -1
+  device: 'cuda:0'
+

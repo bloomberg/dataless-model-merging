@@ -1,0 +1,26 @@
+required_resources:
+   roberta-base:  "s3://ANONYMOUS/roberta-base"
+   huggingface: "s3://ANONYMOUS/huggingface"
+remote_zoo_dir: "s3://ANONYMOUS/local_models_zoo"
+load_from_zoo_use_remote: false
+resource_dir: "resources"
+push_to_remote_zoo: false
+push_to_local_zoo: true
+
+seed: 1
+main_output_dir: 'runs/glue-roberta_base-hyp1/mtl'
+default_model_args:
+  model_name: "{resource_dir}/roberta-base"
+  version: "hyp1_mtl"
+  zoo_filter:
+    version: "hyp1_mtl"
+    seed: 1
+  do_lower_case: false
+  per_device_train_batch_size: 16
+  lr_scheduler_type: "polynomial"
+  warmup_ratio: 0.06
+  learning_rate: 1.0e-5
+  num_train_epochs: 10.0
+
+tokenizer: "{resource_dir}/roberta-base"
+model_type: roberta

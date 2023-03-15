@@ -1,0 +1,48 @@
+required_resources:
+   deberta-v3-large:  "s3://ANONYMOUS/deberta-v3-large"
+   huggingface: "s3://ANONYMOUS/huggingface"
+   emotion_splits: "s3://ANONYMOUS/emotion_splits"
+remote_zoo_dir: "s3://ANONYMOUS/local_models_zoo"
+load_from_zoo_use_remote: false
+resource_dir: "resources"
+push_to_remote_zoo: false
+push_to_local_zoo: true
+
+evaluate_locals_ood_after_merge: true
+evaluate_locals_before: false
+evaluate_locals_after: false
+
+merger:
+  regmean_exclude_param_regex: []
+  #regmean_exclude_param_regex: []
+  regmean_mean: true
+  gram_n_example: 1000
+  gram_version: "h_1000_0726_fix_withclassifier"
+  #regmean_diag: true
+  regmean_reduce_nondiag: 0.1
+
+seed: "{seed}"
+main_output_dir: 'runs/emotion-deberta-large/deberta-new-withclassifier-ood-seed{seed}'
+default_model_args:
+  model_name: "{resource_dir}/deberta-v3-large"
+  version: "hyp0918"
+  zoo_filter:
+    version: "hyp0918"
+    seed: "{seed}"
+  do_lower_case: false
+  per_device_train_batch_size: 16
+  lr_scheduler_type: "polynomial"
+  warmup_ratio: 0.06
+  learning_rate: 6.0e-6
+  num_train_epochs: 20.0
+  #adam_beta1: 0.9
+  #adam_beta2: 0.98
+  #adam_epsilon: 1.0e-6
+  #max_grad_norm: 0.0
+  save_strategy: "epoch"
+  evaluation_strategy: "epoch"
+  load_best_model_at_end: true
+  metric_for_best_model: "key_score"
+  reweight_loss_schema: "sqrt"
+tokenizer: "{resource_dir}/deberta-v3-large"
+model_type: deberta

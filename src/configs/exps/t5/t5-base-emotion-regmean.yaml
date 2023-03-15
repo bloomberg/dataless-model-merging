@@ -1,0 +1,55 @@
+required_resources:
+   t5-v1_1-base:  "s3://ANONYMOUS/t5-v1_1-base"
+   huggingface: "s3://ANONYMOUS/huggingface"
+   emotion_splits: "s3://ANONYMOUS/emotion_splits"
+remote_zoo_dir: "s3://ANONYMOUS/local_models_zoo"
+load_from_zoo_use_remote: false
+resource_dir: "resources"
+push_to_remote_zoo: false
+push_to_local_zoo: true
+
+resample_schema: sqrt
+
+evaluate_locals_ood_after_merge: false
+evaluate_locals_before: false
+evaluate_locals_after: true
+
+seq2seq: true
+
+merger:
+  regmean_exclude_param_regex: []
+  #regmean_exclude_param_regex: []
+  regmean_mean: true
+  gram_n_example: 1000
+  #gram_version: "h_1000_0726_fix_withclassifier"
+  gram_version: "h_1000_0909_resample"
+  regmean_reduce_nondiag: 0.1
+seed: "{seed}"
+main_output_dir: 'runs/emotion-t5_base/regmean-nondiag-rw-seed{seed}'
+default_model_args:
+  model_name: "{resource_dir}/t5-v1_1-base"
+  version: "s50k"
+  zoo_filter:
+    version: "s50k"
+    seed: "{seed}"
+  do_lower_case: false
+  per_device_train_batch_size: 16
+  lr_scheduler_type: "polynomial"
+  warmup_ratio: 0.06
+  learning_rate: 1.0e-4
+  max_steps: 50000
+  #adam_beta1: 0.9
+  #adam_beta2: 0.98
+  #adam_epsilon: 1.0e-6
+  #max_grad_norm: 0.0
+  save_strategy: "steps"
+  evaluation_strategy: "steps"
+  eval_steps: 5000
+  load_best_model_at_end: true
+  metric_for_best_model: "key_score"
+  generation_max_length: 4
+  generation_num_beams: 1
+  predict_with_generate: true
+  include_inputs_for_metrics: true
+tokenizer: "{resource_dir}/t5-v1_1-base"
+model_type: t5

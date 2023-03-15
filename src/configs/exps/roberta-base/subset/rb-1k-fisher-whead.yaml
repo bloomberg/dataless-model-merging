@@ -1,0 +1,38 @@
+required_resources:
+   roberta-base:  "s3://ANONYMOUS/roberta-base"
+   huggingface: "s3://ANONYMOUS/huggingface"
+remote_zoo_dir: "s3://ANONYMOUS/local_models_zoo"
+load_from_zoo_use_remote: false
+resource_dir: "resources"
+push_to_remote_zoo: false
+push_to_local_zoo: true
+
+merger:
+  coeff_search_method: null
+
+  fisher_weighted: true
+  fisher_n_example: 1000
+  fisher_version: "h_1000_fix0726"
+  exclude_param_regex: []
+
+
+seed: "{seed}"
+main_output_dir: 'runs/glue-roberta-base/{partition_method}_1k_fisher/{dataset_name}/{seed}'
+
+default_model_args:
+  model_name: "{resource_dir}/roberta-base"
+  learning_rate: 1.0e-5
+  num_train_epochs: 30.0
+  version: "{partition_method}1k_0"
+  zoo_filter:
+    version: "{partition_method}1k_0"
+    seed: "{seed}"
+    num_train_epochs: 30.0
+  do_lower_case: true
+  per_device_train_batch_size: 16
+  evaluation_strategy: "steps"
+  eval_steps: 500
+
+
+tokenizer: "{resource_dir}/roberta-base"
+model_type: roberta

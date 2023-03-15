@@ -1,0 +1,35 @@
+required_resources:
+   roberta-base:  "s3://ANONYMOUS/roberta-base"
+   huggingface: "s3://ANONYMOUS/huggingface"
+remote_zoo_dir: "s3://ANONYMOUS/local_models_zoo"
+load_from_zoo_use_remote: false
+resource_dir: "resources"
+push_to_remote_zoo: false
+push_to_local_zoo: true
+
+evaluate_locals_before: false
+
+merger:
+  exclude_param_regex: ['.*pre_classifier.*','.*classifier.*']
+  coeff_search_method: 'grid'
+  n_trials: 51
+  fisher_weighted: true
+  fisher_n_example: 1000
+  fisher_version: "h_1000_fix0708"
+
+
+seed: 2
+main_output_dir: 'runs/roberta-base/coeff_grid_search_new_51'
+output_dir_keys: ['seed']
+default_model_args:
+  model_name: "{resource_dir}/roberta-base"
+  learning_rate: 2.0e-5
+  num_train_epochs: 3.0
+  version: 1
+  zoo_filter:
+    version: 1
+    seed: 2
+  do_lower_case: false
+  per_device_train_batch_size: 16
+tokenizer: "{resource_dir}/roberta-base"
+model_type: roberta

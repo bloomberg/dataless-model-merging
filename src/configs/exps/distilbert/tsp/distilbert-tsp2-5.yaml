@@ -1,0 +1,27 @@
+required_resources:
+   distilbert-base-uncased:  "s3://ANONYMOUS/distilbert-base-uncased"
+   huggingface: "s3://ANONYMOUS/huggingface"
+remote_zoo_dir: "s3://ANONYMOUS/local_models_zoo"
+load_from_zoo_use_remote: false
+resource_dir: "resources"
+push_to_remote_zoo: false
+push_to_local_zoo: true
+
+merger:
+  exclude_param_regex: ['.*pre_classifier.*','.*classifier.*', ".*layer.5.*", ".*layer.4.*", ".*layer.3.*", ".*layer.2.*"]
+
+
+seed: 1
+main_output_dir: 'runs/glue-distilbert-base-uncased/tsp_layer2-5/seed1'
+default_model_args:
+  model_name: "{resource_dir}/distilbert-base-uncased"
+  learning_rate: 2.0e-5
+  num_train_epochs: 3.0
+  version: 1
+  zoo_filter:
+    version: 1
+    seed: 1
+  do_lower_case: false
+  per_device_train_batch_size: 16
+tokenizer: "{resource_dir}/distilbert-base-uncased"
+model_type: distilbert

@@ -1,0 +1,173 @@
+main_output_dir: 'runs/debug'
+load_dir: null
+output_dir_keys: {}
+seed: 0
+
+# model load and model save
+load_from_zoo: "maybe"
+load_from_zoo_use_remote: false
+push_to_local_zoo: true
+local_zoo_dir: "runs/"
+push_to_remote_zoo: false
+upload_runs_to_s3: false
+s3_runs_dir: ""
+download_remote_resources: false
+
+
+templates: {}
+
+data_file_path: "{resource_dir}/data_files/{dataset}_data.h5"
+partition_file_path: "{resource_dir}/partition_files/{dataset}_partition.h5"
+resource_dir: "modelmerge_data/"
+hf_datasets_cache_dir: "{resource_dir}/huggingface/"
+
+required_resources: {}
+evaluate_locals_before: false
+evaluate_locals_after: false
+evaluate_global_model: true
+evaluate_locals_other_tasks: false
+evaluate_locals_ood_after_merge: false
+evaluate_locals_ood_before_merge: false
+evaluate_ensemble_locals: false
+evaluate_ensemble_ood: false
+
+load_from_checkpoint: false
+
+evaluate_global_joint: false
+eval_on_test: false # only applies to call to "evaluate local models"
+
+post_merge_train: false
+post_merge_reinit: false
+
+# if true, models will be trained with local_models.mtl_models, which will overwrite local_models.models
+# after initialization. local_models.models will be renamed to local_models._models
+mtl: false
+mtl_all_tasks: false
+mtl_shared_label_space: false
+
+
+ood_datasets: {}
+ood_all_is_test: false
+
+resample_schema: null # currently only works for emotion-gen
+
+dseed_n: 0
+
+local_models:
+  output_dir_format: '{main_output_dir}/local_models/{name}'
+  load_dir_format: null
+  models: {}
+global_model:
+  output_dir_format: '{main_output_dir}/global_model'
+merger:
+  enabled: true
+  algo: 'fedavg'
+  fisher_weighted: false
+  fisher_n_example: -1
+  fisher_variant: "hard"
+  fisher_smooth: 1.0e-10
+  exclude_param_regex: []
+  coeff_search_method: null
+  n_trials: -1
+  fisher_version: 0
+  fisher_normalize: null
+
+  regmean_mean: false
+  gram_n_example: -1
+  gram_version: 0
+  regmean_exclude_param_regex: []
+  multilabel_head_params: ['classifier.out_proj.weight', 'classifier.weight']
+  multi_label_head_special: true
+  emp_fisher: false
+  regmean_diag: false
+  regmean_reduce_nondiag: -1.0
+
+  ot_params:
+    ground_metric: "euclidean"
+    ground_metric_normalize: "none"
+    reg: 0.01
+    not_squared: true
+    ground_metric_eff: true
+    debug: true
+    clip_min: 0.0
+    clip_max: 5.0
+    geom_ensemble_type: "wts"
+    normalize_wts: true
+    clip_gm: false
+    dist_normalize: false
+    activation_histograms: false
+    act-num-samples: 100
+    exact: true
+    correction: true
+    proper_marginals: false
+    past_correction: true
+
+ensembler:
+  enabled: false
+  handle_missing_label: false
+  hard_ensemble: false
+
+
+tokenizer: "{resource_dir}/distilbert-base-uncased"
+tokenizer_add_prefix_space: false
+model_type: distilbert
+
+seq2seq: false
+# for debug
+
+debug: false
+global_device: 'cuda:0'
+dataset: "glue"
+partition_method: "uniform"
+partition:
+  n_partition: -1
+  method: null
+  n_total_examples: -1
+  niid_label_alpha: 0.8
+
+# from fednlp: model_args
+default_model_args:
+  activated: true
+  optim_param_regex: null # default to all
+  model_name: "{resource_dir}/distilbert-base-uncased"
+  zoo_filter: {}
+  zoo_idx: 0
+  load_path: ""
+  num_labels: -1
+  is_regression: false
+  num_train_epochs: 100.0
+  do_lower_case: true
+  per_device_eval_batch_size: 8
+  fp16: false
+  gradient_accumulation_steps: 1
+  learning_rate: 5.0e-5
+  local_rank: -1
+  max_grad_norm: 1.0
+  max_seq_length: 128
+  model_type: null
+  multiprocessing_chunksize: 500
+  n_gpu: 1
+  overwrite_output_dir: false
+  save_steps: 100000000
+  save_total_limit: 2
+  max_steps: -1
+  per_device_train_batch_size: 8
+  use_multiprocessing: false
+  labels_map: {}
+  regression: false
+  version: 0
+  train_subset_n: -1
+  train_subset_seed: null
+  lr_scheduler_type: "linear"
+  warmup_ratio: 0.0
+  reweight_loss_schema: "no"
+  greater_is_better: true
+  generation_max_length: null
+  generation_num_beams: null
+  predict_with_generate: false
+  prune_logits: false
+
+
+post_merge_model_args:
+  optim_param_regex: []
+  learning_rate: -1

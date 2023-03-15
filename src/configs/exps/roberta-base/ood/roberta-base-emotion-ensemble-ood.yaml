@@ -1,0 +1,47 @@
+required_resources:
+   roberta-base:  "s3://ANONYMOUS/roberta-base"
+   huggingface: "s3://ANONYMOUS/huggingface"
+   emotion_splits: "s3://ANONYMOUS/emotion_splits"
+remote_zoo_dir: "s3://ANONYMOUS/local_models_zoo"
+load_from_zoo_use_remote: false
+resource_dir: "resources"
+push_to_remote_zoo: false
+push_to_local_zoo: true
+
+evaluate_ensemble_locals: false
+evaluate_ensemble_ood: true
+evaluate_locals_ood_after_merge: true
+evaluate_locals_before: false
+evaluate_locals_after: false
+
+merger:
+  enabled: false
+
+ensembler:
+  enabled: true
+  handle_missing_label: true
+
+seed: "{seed}"
+main_output_dir: 'runs/emotion-roberta_base/ensemble-ood-seed{seed}'
+default_model_args:
+  model_name: "{resource_dir}/roberta-base"
+  version: "hyp0812"
+  zoo_filter:
+    version: "hyp0812"
+    seed: "{seed}"
+  do_lower_case: false
+  per_device_train_batch_size: 16
+  lr_scheduler_type: "polynomial"
+  warmup_ratio: 0.06
+  learning_rate: 1.0e-5
+  num_train_epochs: 20.0
+  #adam_beta1: 0.9
+  #adam_beta2: 0.98
+  #adam_epsilon: 1.0e-6
+  #max_grad_norm: 0.0
+  save_strategy: "epoch"
+  evaluation_strategy: "epoch"
+  load_best_model_at_end: true
+  metric_for_best_model: "key_score"
+tokenizer: "{resource_dir}/roberta-base"
+model_type: roberta-base
